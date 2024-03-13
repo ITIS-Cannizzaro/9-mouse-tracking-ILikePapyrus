@@ -34,8 +34,6 @@ public class EventoMouse implements MouseListener {
                         matriceBottoni[i][k].setBackground(Color.GREEN);
                     }
                 }
-
-
             }
         }
     }
@@ -55,24 +53,14 @@ public class EventoMouse implements MouseListener {
                 if(e.getSource() == matriceBottoni[i][k]) {
                     coloraCornice(i, k, true);
                     cambiaCarattere(i, k, true);
-                    // Colori
-                    /*
-                    if(matriceBottoni[i][k].getBackground() == Color.BLUE) {
-                        matriceBottoni[i][k].setForeground(Color.WHITE);
-                    } else if(matriceBottoni[i][k].getBackground() == null || matriceBottoni[i][k].getBackground() == Color.GREEN) {
-                        matriceBottoni[i][k].setForeground(Color.BLACK);
-                    }*/
                 }
             }
         }
     }
 
-    void coloraCornice(int i, int j, boolean on)
-    {
-        for(int a = -1; a < 2; a++)
-        {
-            for (int b = -1; b < 2; b++)
-            {
+    void coloraCornice(int i, int j, boolean on) {
+        for(int a = -1; a < 2; a++) {
+            for (int b = -1; b < 2; b++) {
                 if(!(i == 0 && j == 0) && i+a >= 0 && i+a < matriceBottoni.length && j+b >= 0 && j+b < matriceBottoni[0].length ) {
                 // matriceBottoni[i+a][j+b].setBackground(on ? Color.BLUE : null);
                 // on ? Color.BLUE : null
@@ -87,7 +75,6 @@ public class EventoMouse implements MouseListener {
 
     void cambiaCarattere(int i, int j, boolean on)
     {
-        // AGGIUNGERE WINGDINGS CON TASTO TASTIERA (w) https://lingojam.com/WingdingsTranslator in nuova classe
         // Array di stringhe
         String caratteri[] = {"a", "b", "c", "d", "e", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "A", "B", "C", "D", "E"};
         for(int a = -1; a < 2; a++)
@@ -108,10 +95,8 @@ public class EventoMouse implements MouseListener {
             for(int k=0; k<10; k++) {
                 // Controlla da dove viene l'evento
                 if(e.getSource() == matriceBottoni[i][k]) {
-                    for(int a = -1; a < 2; a++)
-                    {
-                        for (int b = -1; b < 2; b++)
-                        {
+                    for(int a = -1; a < 2; a++) {
+                        for (int b = -1; b < 2; b++) {
                             if(!(i == 0 && k == 0) && i+a >= 0 && i+a < matriceBottoni.length && k+b >= 0 && k+b < matriceBottoni[0].length ) {
                                 matriceBottoni[i+a][k+b].setText(null);
                                 matriceBottoni[i+a][k+b].setBackground(null);
