@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 
 public class MainClass {
     static JButton[][] matriceBottoni = new JButton[10][10];
@@ -18,7 +19,9 @@ public class MainClass {
         for(int i=0; i<10; i++) {
             for(int k=0; k<10; k++) {
                 EventoMouse mouse = new EventoMouse(matriceBottoni);
+                EventoTastiera tastiera = new EventoTastiera(matriceBottoni);
                 matriceBottoni[i][k].addMouseListener(mouse);
+                //matriceBottoni[i][k].addKeyListener((KeyListener) tastiera);
             }
         }
 

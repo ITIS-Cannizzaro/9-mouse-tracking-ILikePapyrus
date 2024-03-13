@@ -48,26 +48,13 @@ public class EventoMouse implements MouseListener {
     // Cosa succede quando il mouse passa su un pulsante
     @Override
     public void mouseEntered(MouseEvent e) {
-        // Array di stringhe
-        String caratteri[] = {"a", "b", "c", "d", "e", "1", "2", "3", "4", "5", "A", "B", "C", "D", "E"};
-
         // Cicla nei pulsanti della matrice
         for(int i=0; i<10; i++) {
             for(int k=0; k<10; k++) {
                 // Controlla da dove viene l'evento
                 if(e.getSource() == matriceBottoni[i][k]) {
                     coloraCornice(i, k, true);
-                        // Cambia il testo del pulsante con un carattere a caso preso dall'array caratteri[]
-//                        matriceBottoni[i-1][k-1].setText(caratteri[random.nextInt(caratteri.length)]);
-//                        matriceBottoni[i-1][k].setText(caratteri[random.nextInt(caratteri.length)]);
-//                        matriceBottoni[i-1][k+1].setText(caratteri[random.nextInt(caratteri.length)]);
-//                        matriceBottoni[i][k-1].setText(caratteri[random.nextInt(caratteri.length)]);
-//                        matriceBottoni[i][k+1].setText(caratteri[random.nextInt(caratteri.length)]);
-//                        matriceBottoni[i+1][k-1].setText(caratteri[random.nextInt(caratteri.length)]);
-//                        matriceBottoni[i+1][k].setText(caratteri[random.nextInt(caratteri.length)]);
-//                        matriceBottoni[i+1][k+1].setText(caratteri[random.nextInt(caratteri.length)]);
-
-
+                    cambiaCarattere(i, k, true);
                     // Colori
                     /*
                     if(matriceBottoni[i][k].getBackground() == Color.BLUE) {
@@ -86,12 +73,30 @@ public class EventoMouse implements MouseListener {
         {
             for (int b = -1; b < 2; b++)
             {
-                if(!(i == 0 && j == 0) && i+a >= 0 && i+a < matriceBottoni.length && j+b >= 0 && j+b < matriceBottoni[0].length )
+                if(!(i == 0 && j == 0) && i+a >= 0 && i+a < matriceBottoni.length && j+b >= 0 && j+b < matriceBottoni[0].length ) {
                 // matriceBottoni[i+a][j+b].setBackground(on ? Color.BLUE : null);
                 // on ? Color.BLUE : null
-                // Se il mouse è sul pulsante allora colora di blu, altrimenti rimette a posto -> è un if
+                // Se il mouse è sul pulsante (on) allora (?) colora di blu (Color.BLUE), altrimenti (:) rimette a posto (null) -> è un if
 
-                matriceBottoni[i+a][j+b].setBackground(on ? Color.BLUE : null);
+                    matriceBottoni[i+a][j+b].setBackground(on ? Color.BLUE : null);
+                    matriceBottoni[i+a][j+b].setForeground(on ? Color.WHITE : null);
+                }
+            }
+        }
+    }
+
+    void cambiaCarattere(int i, int j, boolean on)
+    {
+        // AGGIUNGERE WINGDINGS CON TASTO TASTIERA (w) https://lingojam.com/WingdingsTranslator in nuova classe
+        // Array di stringhe
+        String caratteri[] = {"a", "b", "c", "d", "e", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "A", "B", "C", "D", "E"};
+        for(int a = -1; a < 2; a++)
+        {
+            for (int b = -1; b < 2; b++)
+            {
+                if(!(i == 0 && j == 0) && i+a >= 0 && i+a < matriceBottoni.length && j+b >= 0 && j+b < matriceBottoni[0].length ) {
+                    matriceBottoni[i+a][j+b].setText(caratteri[random.nextInt(caratteri.length)]);
+                }
             }
         }
     }
@@ -103,8 +108,16 @@ public class EventoMouse implements MouseListener {
             for(int k=0; k<10; k++) {
                 // Controlla da dove viene l'evento
                 if(e.getSource() == matriceBottoni[i][k]) {
-                    coloraCornice(i, k, false);
-
+                    for(int a = -1; a < 2; a++)
+                    {
+                        for (int b = -1; b < 2; b++)
+                        {
+                            if(!(i == 0 && k == 0) && i+a >= 0 && i+a < matriceBottoni.length && k+b >= 0 && k+b < matriceBottoni[0].length ) {
+                                matriceBottoni[i+a][k+b].setText(null);
+                                matriceBottoni[i+a][k+b].setBackground(null);
+                            }
+                        }
+                    }
                 }
             }
         }
