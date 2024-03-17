@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.util.Random;
 
 public class EventoMouse implements MouseListener {
+    // Attributi
     Random random = new Random();
     JButton[][] matriceBottoni;
 
@@ -69,20 +70,46 @@ public class EventoMouse implements MouseListener {
                     matriceBottoni[i+a][j+b].setBackground(on ? Color.BLUE : null);
                     matriceBottoni[i+a][j+b].setForeground(on ? Color.WHITE : null);
                 }
+
+                // Sostituisce i colori nel caso particolare in cui il mouse si trova in [0][0]
+                if(i == 0 && j == 0) {
+                    // [0][0]
+                    matriceBottoni[0][0].setBackground(on ? Color.BLUE : null);
+                    matriceBottoni[0][0].setForeground(on ? Color.WHITE : null);
+                    // [0][1]
+                    matriceBottoni[0][1].setBackground(on ? Color.BLUE : null);
+                    matriceBottoni[0][1].setForeground(on ? Color.WHITE : null);
+                    // [1][0]
+                    matriceBottoni[1][0].setBackground(on ? Color.BLUE : null);
+                    matriceBottoni[1][0].setForeground(on ? Color.WHITE : null);
+                    // [1][1]
+                    matriceBottoni[1][1].setBackground(on ? Color.BLUE : null);
+                    matriceBottoni[1][1].setForeground(on ? Color.WHITE : null);
+                }
             }
         }
     }
 
-    void cambiaCarattere(int i, int j, boolean on)
-    {
+    void cambiaCarattere(int i, int j, boolean on) {
         // Array di stringhe
         String caratteri[] = {"a", "b", "c", "d", "e", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "A", "B", "C", "D", "E"};
-        for(int a = -1; a < 2; a++)
-        {
-            for (int b = -1; b < 2; b++)
-            {
+        for(int a = -1; a < 2; a++) {
+            for (int b = -1; b < 2; b++) {
+                // Sostituisce il testo randomicamente
                 if(!(i == 0 && j == 0) && i+a >= 0 && i+a < matriceBottoni.length && j+b >= 0 && j+b < matriceBottoni[0].length ) {
                     matriceBottoni[i+a][j+b].setText(caratteri[random.nextInt(caratteri.length)]);
+                }
+
+                // Sostituisce il testo nelle caselle affette dal caso particolare del mouse in [0][0]
+                if(i==0 && j == 0) {
+                    // [0][0]
+                    matriceBottoni[0][0].setText(caratteri[random.nextInt(caratteri.length)]);
+                    // [0][1]
+                    matriceBottoni[0][1].setText(caratteri[random.nextInt(caratteri.length)]);
+                    // [1][0]
+                    matriceBottoni[1][0].setText(caratteri[random.nextInt(caratteri.length)]);
+                    // [1][1]
+                    matriceBottoni[1][1].setText(caratteri[random.nextInt(caratteri.length)]);
                 }
             }
         }

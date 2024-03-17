@@ -17,6 +17,7 @@ public class EventoTastiera extends Timer implements KeyListener {
     // Attributi
     JButton[][] matriceBottoni;
     Random random = new Random();
+    // ARRAY BASICI DI CARATTERI IN WINGDINGS
     final static String[] wingdings_numeri = {
             "\uD83D\uDCC1\uFE0E", // 0
             "\uD83D\uDCC2\uFE0E", // 1
@@ -84,7 +85,7 @@ public class EventoTastiera extends Timer implements KeyListener {
             "✡\uFE0E", // Y
             "☪\uFE0E"}; // Z
 
-    // Costruttore
+    // Costruttore - prende in ingresso la matriceBottoni e la salva
     public EventoTastiera(JButton[][] matriceBottoni) {
         this.matriceBottoni = matriceBottoni;
     }
@@ -98,30 +99,44 @@ public class EventoTastiera extends Timer implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int[] randArr = {0, 1, 2};
         int randArrSel = 0;
+
         if(e.getKeyCode() == KeyEvent.VK_W) {
+            // Wingdings
             for(int i=0; i<10; i++) {
                 for(int k=0; k<10; k++) {
                     matriceBottoni[i][k].setBackground(Color.BLACK);
                     matriceBottoni[i][k].setForeground(Color.WHITE);
                     randArrSel = randArr[random.nextInt(randArr.length)];
-                    wingdings(i, k, randArrSel);
+                    wingdings(i, k, randArrSel, e);
                 }
             }
+
+            // Log tasto
+            System.out.println("Pressed " + e.getKeyCode() + " - " + e.getKeyChar() + " - Evento wingdings partito");
         }
 
         if(e.getKeyCode() == KeyEvent.VK_M) {
-            // Menù
+            // Menu
             Menu.menuWindow();
+
+            // Log testo
+            System.out.println("Pressed " + e.getKeyCode() + " - " + e.getKeyChar() + " - Evento menu partito");
         }
 
         if(e.getKeyCode() == KeyEvent.VK_R) {
             // Reset matrice
             reset();
+
+            // Log testo
+            System.out.println("Pressed " + e.getKeyCode() + " - " + e.getKeyChar() + " - Evento reset partito");
         }
 
         if(e.getKeyCode() == KeyEvent.VK_C) {
+            // "Epilepsy"
             try {
-                epilepsy();
+                epilepsy(e);
+
+                System.out.println("Pressed " + e.getKeyCode() + " - " + e.getKeyChar() + " - Evento epilepsy partito");
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
@@ -130,11 +145,15 @@ public class EventoTastiera extends Timer implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println("Released " + e.getKeyCode());
+        System.out.println("Released " + e.getKeyCode() + " - " + e.getKeyChar());
     }
 
-    private void wingdings(int i, int k, int randArrSel) {
+    private void wingdings(int i, int k, int randArrSel, KeyEvent e) {
+        // TODO fix wingdings not stopping when "r" is pressed
+        // TODO after 5 seconds when the mouse is still, start the event even if "w" isn't being pressed
+        // Crea timer
         Timer wingdingsTimer = new Timer();
+        // Crea compito da fare mentre il timer è in azione
         TimerTask cambioCaratteri = new TimerTask() {
             @Override
             public void run() {
@@ -142,14 +161,18 @@ public class EventoTastiera extends Timer implements KeyListener {
                     for (int b = -1; b < 2; b++) {
                         if(!(i == 0 && k == 0) && i+a >= 0 && i+a < matriceBottoni.length && k+b >= 0 && k+b < matriceBottoni[0].length ) {
                             if(randArrSel == 0) {
+                                // Sostituisce testo con numeri in wingdings randomicamente
                                 matriceBottoni[i+a][k+b].setText(wingdings_numeri[random.nextInt(wingdings_numeri.length)]);
                             } else if(randArrSel == 1) {
+                                // Sostituisce testo con lettere minuscole in wingdings randomicamente
                                 matriceBottoni[i+a][k+b].setText(wingdings_minuscola[random.nextInt(wingdings_minuscola.length)]);
                             } else if(randArrSel == 2) {
-                                matriceBottoni[i + a][k + b].setText(wingdings_maiuscola[random.nextInt(wingdings_maiuscola.length)]);
+                                // Sostituisce testo con lettere maiuscole in wingdings randomicamente
+                                matriceBottoni[i+a][k+b].setText(wingdings_maiuscola[random.nextInt(wingdings_maiuscola.length)]);
                             }
                         }
 
+                        // Se il mouse si muove i colori delle "caselle" rimangono sempre nero per lo sfondo e bianco per il testo
                         if(matriceBottoni[i][k].getBackground() == null || matriceBottoni[i][k].getForeground() == Color.WHITE || matriceBottoni[i][k].getText() != null) {
                             matriceBottoni[i][k].setBackground(Color.BLACK);
                         }
@@ -158,35 +181,69 @@ public class EventoTastiera extends Timer implements KeyListener {
             }
         };
 
+        // Fa partire il timer
         wingdingsTimer.schedule(cambioCaratteri, 0, 10);
-    }
 
-    private void reset() {
-        for(int i=0; i<10; i++) {
-            for(int k=0; k<10; k++) {
-                matriceBottoni[i][k].setText(null);
-                matriceBottoni[i][k].setBackground(null);
-                matriceBottoni[i][k].setForeground(Color.BLACK);
-            }
+        // Se viene premuta la lettera "r" allora chiama reset() ma gli mette in ingresso il timer e l'evento
+        if(e.getKeyCode() == KeyEvent.VK_R) {
+            reset(wingdingsTimer, cambioCaratteri);
         }
     }
 
-    private void epilepsy() throws InterruptedException {
-        reset();
+    private void epilepsy(KeyEvent e) throws InterruptedException {
+        // TODO fix color/epilepsy not stopping when "r" is pressed
+        // Lasciamo stare il nome... :)
 
+        // Crea il nuovo timer
         Timer timerEpilepsy = new Timer("timerEpilepsy");
+        // Crea il nuovo evento da eseguire durante il timer
         TimerTask cambioColori = new TimerTask() {
             @Override
             public void run() {
+                // Array di colori da sostituire allo sfondo di ogni singola casella
                 Color[] arrayColori = {Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.RED, Color.YELLOW};
                 for(int i=0; i<10; i++) {
                     for(int k=0; k<10; k++) {
+                        // Usando random prende ogni colore dall'array e lo sostituisce, come per i caratteri
                         matriceBottoni[i][k].setBackground(arrayColori[random.nextInt(arrayColori.length)]);
                     }
                 }
             }
         };
 
+        // Fa partire il timer
         timerEpilepsy.schedule(cambioColori, 0, 10);
+
+        // Se viene premuta la lettera "r" allora chiama reset() ma gli mette in ingresso il timer e l'evento
+        if(e.getKeyCode() == KeyEvent.VK_R) {
+            reset(timerEpilepsy, cambioColori);
+        }
+    }
+
+    // Reset normale
+    private void reset() {
+        for(int i=0; i<10; i++) {
+            for(int k=0; k<10; k++) {
+                matriceBottoni[i][k].setText(null);         // Resetta completamente il testo
+                matriceBottoni[i][k].setBackground(null);   // Resetta lo sfondo, mettendolo a quello di default di quando si avvia il programma
+                matriceBottoni[i][k].setForeground(null);   // Resetta il colore delle scritte, mettendolo a quello di default di quando si avvia il programma
+            }
+        }
+    }
+
+    // Reset per eventi timer
+    private void reset(Timer timer, TimerTask tt) {
+        for(int i=0; i<10; i++) {
+            for(int k=0; k<10; k++) {
+                // Se il timer in ingresso è partito
+                if(timer != null) {
+                    tt.cancel();        // Cancella ogni istruzione presente all'interno dell'evento
+                    timer.cancel();     // Resetta il timer
+                    timer.purge();      // Elimina ogni evento dalla coda del timer
+                }
+
+                reset();    // Chiama il normale reset per fare le classiche eliminazioni
+            }
+        }
     }
 }
