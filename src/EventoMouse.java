@@ -13,6 +13,7 @@ public class EventoMouse implements MouseListener {
     public EventoMouse(JButton[][] matriceBottoni) {
         this.matriceBottoni = matriceBottoni;
     }
+    
     // Metodi astratti da sovrascrivere
     @Override
     public void mouseClicked(MouseEvent e) {

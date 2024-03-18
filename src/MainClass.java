@@ -17,6 +17,7 @@ public class MainClass {
             for(int k=0; k<10; k++) {
                 // Assegna ad ogni casella un pulsante della matrice
                 panel.add(matriceBottoni[i][k] = new JButton());
+                matriceBottoni[i][k].setFont( new Font("Serif", Font.BOLD, 24));
             }
         }
 

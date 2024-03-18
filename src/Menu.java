@@ -1,6 +1,5 @@
 // Import librerie
 import javax.swing.*;
-import java.awt.*;
 
 public class Menu {
     public static void menuWindow() {

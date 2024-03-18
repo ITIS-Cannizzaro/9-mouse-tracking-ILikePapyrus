@@ -141,6 +141,10 @@ public class EventoTastiera extends Timer implements KeyListener {
                 throw new RuntimeException(ex);
             }
         }
+
+        if(e.getKeyCode() == KeyEvent.VK_T) {
+            countdown();
+        }
     }
 
     @Override
@@ -151,6 +155,8 @@ public class EventoTastiera extends Timer implements KeyListener {
     private void wingdings(int i, int k, int randArrSel, KeyEvent e) {
         // TODO fix wingdings not stopping when "r" is pressed
         // TODO after 5 seconds when the mouse is still, start the event even if "w" isn't being pressed
+        // https://www.developer.com/java/java-mouse-listeners/#:~:text=Java%20Mouse%2DMotion%20Listener,it%3A%20mouseMoved(MouseEvent%20e)
+
         // Crea timer
         Timer wingdingsTimer = new Timer();
         // Crea compito da fare mentre il timer è in azione
@@ -213,11 +219,6 @@ public class EventoTastiera extends Timer implements KeyListener {
 
         // Fa partire il timer
         timerEpilepsy.schedule(cambioColori, 0, 10);
-
-        // Se viene premuta la lettera "r" allora chiama reset() ma gli mette in ingresso il timer e l'evento
-        if(e.getKeyCode() == KeyEvent.VK_R) {
-            reset(timerEpilepsy, cambioColori);
-        }
     }
 
     // Reset normale
@@ -245,5 +246,23 @@ public class EventoTastiera extends Timer implements KeyListener {
                 reset();    // Chiama il normale reset per fare le classiche eliminazioni
             }
         }
+    }
+
+    public void countdown() {
+        int sec = 15;
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            int countdown = sec;
+            @Override
+            public void run() {
+                System.out.println(countdown);
+                if(countdown <=0) {
+                    System.out.println("fine countdown");
+                    timer.cancel();
+                }
+
+                countdown--;
+            }
+        }, 0, 1000);
     }
 }
