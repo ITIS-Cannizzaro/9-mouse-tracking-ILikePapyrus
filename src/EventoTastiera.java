@@ -1,3 +1,4 @@
+
 // Import librerie
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +16,7 @@ public class EventoTastiera extends Timer implements KeyListener {
     // r -> reset
 
     // Attributi
+    Timer timer;
     JButton[][] matriceBottoni;
     Random random = new Random();
     // ARRAY BASICI DI CARATTERI IN WINGDINGS
@@ -28,7 +30,7 @@ public class EventoTastiera extends Timer implements KeyListener {
             "⌛\uFE0E", // 6
             "\uD83D\uDDAE\uFE0E", // 7
             "\uD83D\uDDB0\uFE0E", // 8
-            "\uD83D\uDDB2\uFE0E"  /* 9 */
+            "\uD83D\uDDB2\uFE0E" /* 9 */
     };
     final static String[] wingdings_minuscola = {
             "♋\uFE0E", // a
@@ -56,7 +58,7 @@ public class EventoTastiera extends Timer implements KeyListener {
             "⬥\uFE0E", // w
             "⌧\uFE0E", // x
             "⍓\uFE0E", // y
-            "⌘\uFE0E"}; // z
+            "⌘\uFE0E" }; // z
     final static String[] wingdings_maiuscola = {
             "✌\uFE0E", // A
             "\uD83D\uDC4C\uFE0E", // B
@@ -83,7 +85,7 @@ public class EventoTastiera extends Timer implements KeyListener {
             "\uD83D\uDD48\uFE0E", // W
             "✠\uFE0E", // X
             "✡\uFE0E", // Y
-            "☪\uFE0E"}; // Z
+            "☪\uFE0E" }; // Z
 
     // Costruttore - prende in ingresso la matriceBottoni e la salva
     public EventoTastiera(JButton[][] matriceBottoni) {
@@ -97,17 +99,17 @@ public class EventoTastiera extends Timer implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        int[] randArr = {0, 1, 2};
+        int[] randArr = { 0, 1, 2 };
         int randArrSel = 0;
 
-        if(e.getKeyCode() == KeyEvent.VK_W) {
+        if (e.getKeyCode() == KeyEvent.VK_W) {
             // Wingdings
-            for(int i=0; i<10; i++) {
-                for(int k=0; k<10; k++) {
-                    matriceBottoni[i][k].setBackground(Color.BLACK);
-                    matriceBottoni[i][k].setForeground(Color.WHITE);
+            for (int i = 0; i < 10; i++) {
+                for (int k = 0; k < 10; k++) {
+                    matriceBottoni[i][k].setBackground(Color.BLACK); // funziona
+                    matriceBottoni[i][k].setForeground(Color.WHITE); // funziona
                     randArrSel = randArr[random.nextInt(randArr.length)];
-                    wingdings(i, k, randArrSel, e);
+                    wingdings(i, k, randArrSel, e); // ???
                 }
             }
 
@@ -115,7 +117,7 @@ public class EventoTastiera extends Timer implements KeyListener {
             System.out.println("Pressed " + e.getKeyCode() + " - " + e.getKeyChar() + " - Evento wingdings partito");
         }
 
-        if(e.getKeyCode() == KeyEvent.VK_M) {
+        if (e.getKeyCode() == KeyEvent.VK_M) {
             // Menu
             Menu.menuWindow();
 
@@ -123,7 +125,7 @@ public class EventoTastiera extends Timer implements KeyListener {
             System.out.println("Pressed " + e.getKeyCode() + " - " + e.getKeyChar() + " - Evento menu partito");
         }
 
-        if(e.getKeyCode() == KeyEvent.VK_R) {
+        if (e.getKeyCode() == KeyEvent.VK_R) {
             // Reset matrice
             reset();
 
@@ -131,7 +133,7 @@ public class EventoTastiera extends Timer implements KeyListener {
             System.out.println("Pressed " + e.getKeyCode() + " - " + e.getKeyChar() + " - Evento reset partito");
         }
 
-        if(e.getKeyCode() == KeyEvent.VK_C) {
+        if (e.getKeyCode() == KeyEvent.VK_C) {
             // "Epilepsy"
             try {
                 epilepsy(e);
@@ -142,7 +144,7 @@ public class EventoTastiera extends Timer implements KeyListener {
             }
         }
 
-        if(e.getKeyCode() == KeyEvent.VK_T) {
+        if (e.getKeyCode() == KeyEvent.VK_T) {
             countdown();
         }
     }
@@ -153,46 +155,40 @@ public class EventoTastiera extends Timer implements KeyListener {
     }
 
     private void wingdings(int i, int k, int randArrSel, KeyEvent e) {
-        // TODO fix wingdings not stopping when "r" is pressed
-        // TODO after 5 seconds when the mouse is still, start the event even if "w" isn't being pressed
+        // TODO after 5 seconds when the mouse is still, start the event even if "w"
+        // isn't being pressed
         // https://www.developer.com/java/java-mouse-listeners/#:~:text=Java%20Mouse%2DMotion%20Listener,it%3A%20mouseMoved(MouseEvent%20e)
 
-        // Crea timer
-        Timer wingdingsTimer = new Timer();
+        if (timer != null) {
+            timer.cancel();
+            timer.purge(); // Crea il nuovo timer
+        }
+
+        timer = new Timer();
         // Crea compito da fare mentre il timer è in azione
         TimerTask cambioCaratteri = new TimerTask() {
             @Override
             public void run() {
-                for(int a = -1; a < 2; a++) {
-                    for (int b = -1; b < 2; b++) {
-                        if(!(i == 0 && k == 0) && i+a >= 0 && i+a < matriceBottoni.length && k+b >= 0 && k+b < matriceBottoni[0].length ) {
-                            if(randArrSel == 0) {
-                                // Sostituisce testo con numeri in wingdings randomicamente
-                                matriceBottoni[i+a][k+b].setText(wingdings_numeri[random.nextInt(wingdings_numeri.length)]);
-                            } else if(randArrSel == 1) {
-                                // Sostituisce testo con lettere minuscole in wingdings randomicamente
-                                matriceBottoni[i+a][k+b].setText(wingdings_minuscola[random.nextInt(wingdings_minuscola.length)]);
-                            } else if(randArrSel == 2) {
-                                // Sostituisce testo con lettere maiuscole in wingdings randomicamente
-                                matriceBottoni[i+a][k+b].setText(wingdings_maiuscola[random.nextInt(wingdings_maiuscola.length)]);
-                            }
-                        }
+                System.out.println("cambio indice: " + i + " e " + k);
+                matriceBottoni[i][k].setText(wingdings_numeri[random.nextInt(wingdings_numeri.length)]);
 
-                        // Se il mouse si muove i colori delle "caselle" rimangono sempre nero per lo sfondo e bianco per il testo
-                        if(matriceBottoni[i][k].getBackground() == null || matriceBottoni[i][k].getForeground() == Color.WHITE || matriceBottoni[i][k].getText() != null) {
-                            matriceBottoni[i][k].setBackground(Color.BLACK);
-                        }
-                    }
+                // Se il mouse si muove i colori delle "caselle" rimangono sempre nero per lo
+                // sfondo e bianco per il testo
+                if (matriceBottoni[i][k].getBackground() == null || matriceBottoni[i][k].getForeground() == Color.WHITE
+                        || matriceBottoni[i][k].getText() != null) {
+                    matriceBottoni[i][k].setBackground(Color.BLACK);
                 }
             }
+
         };
 
         // Fa partire il timer
-        wingdingsTimer.schedule(cambioCaratteri, 0, 10);
+        timer.schedule(cambioCaratteri, 0, 100);
 
-        // Se viene premuta la lettera "r" allora chiama reset() ma gli mette in ingresso il timer e l'evento
-        if(e.getKeyCode() == KeyEvent.VK_R) {
-            reset(wingdingsTimer, cambioCaratteri);
+        // Se viene premuta la lettera "r" allora chiama reset() ma gli mette in
+        // ingresso il timer e l'evento
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+            reset();
         }
     }
 
@@ -200,17 +196,23 @@ public class EventoTastiera extends Timer implements KeyListener {
         // TODO fix color/epilepsy not stopping when "r" is pressed
         // Lasciamo stare il nome... :)
 
-        // Crea il nuovo timer
-        Timer timerEpilepsy = new Timer("timerEpilepsy");
+        if (timer != null) {
+            timer.cancel();
+            timer.purge(); // Crea il nuovo timer
+        }
+
+        timer = new Timer();
         // Crea il nuovo evento da eseguire durante il timer
         TimerTask cambioColori = new TimerTask() {
             @Override
             public void run() {
                 // Array di colori da sostituire allo sfondo di ogni singola casella
-                Color[] arrayColori = {Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.RED, Color.YELLOW};
-                for(int i=0; i<10; i++) {
-                    for(int k=0; k<10; k++) {
-                        // Usando random prende ogni colore dall'array e lo sostituisce, come per i caratteri
+                Color[] arrayColori = { Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE,
+                        Color.RED, Color.YELLOW };
+                for (int i = 0; i < 10; i++) {
+                    for (int k = 0; k < 10; k++) {
+                        // Usando random prende ogni colore dall'array e lo sostituisce, come per i
+                        // caratteri
                         matriceBottoni[i][k].setBackground(arrayColori[random.nextInt(arrayColori.length)]);
                     }
                 }
@@ -218,47 +220,43 @@ public class EventoTastiera extends Timer implements KeyListener {
         };
 
         // Fa partire il timer
-        timerEpilepsy.schedule(cambioColori, 0, 10);
+        timer.schedule(cambioColori, 0, 10);
     }
 
     // Reset normale
     private void reset() {
-        for(int i=0; i<10; i++) {
-            for(int k=0; k<10; k++) {
-                matriceBottoni[i][k].setText(null);         // Resetta completamente il testo
-                matriceBottoni[i][k].setBackground(null);   // Resetta lo sfondo, mettendolo a quello di default di quando si avvia il programma
-                matriceBottoni[i][k].setForeground(null);   // Resetta il colore delle scritte, mettendolo a quello di default di quando si avvia il programma
-            }
+
+        if (timer != null) {
+            timer.cancel();
+            timer.purge(); // Crea il nuovo timer
         }
-    }
 
-    // Reset per eventi timer
-    private void reset(Timer timer, TimerTask tt) {
-        for(int i=0; i<10; i++) {
-            for(int k=0; k<10; k++) {
-                // Se il timer in ingresso è partito
-                if(timer != null) {
-                    tt.cancel();        // Cancella ogni istruzione presente all'interno dell'evento
-                    timer.cancel();     // Resetta il timer
-                    timer.purge();      // Elimina ogni evento dalla coda del timer
-                }
-
-                reset();    // Chiama il normale reset per fare le classiche eliminazioni
+        for (int i = 0; i < 10; i++) {
+            for (int k = 0; k < 10; k++) {
+                matriceBottoni[i][k].setText(null); // Resetta completamente il testo
+                matriceBottoni[i][k].setBackground(null); // Resetta lo sfondo, mettendolo a quello di default di quando
+                                                          // si avvia il programma
+                matriceBottoni[i][k].setForeground(null); // Resetta il colore delle scritte, mettendolo a quello di
+                                                          // default di quando si avvia il programma
             }
         }
     }
 
     public void countdown() {
         int sec = 15;
-        Timer timer = new Timer();
+
+        if (timer != null)
+            timer.purge();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             int countdown = sec;
+
             @Override
             public void run() {
                 System.out.println(countdown);
-                if(countdown <=0) {
+                if (countdown <= 0) {
                     System.out.println("fine countdown");
-                    timer.cancel();
+                    timer.purge();
                 }
 
                 countdown--;

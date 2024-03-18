@@ -67,9 +67,11 @@ public class EventoMouse implements MouseListener {
                 // matriceBottoni[i+a][j+b].setBackground(on ? Color.BLUE : null);
                 // on ? Color.BLUE : null
                 // Se il mouse è sul pulsante (on) allora (?) colora di blu (Color.BLUE), altrimenti (:) rimette a posto (null) -> è un if
-
-                    matriceBottoni[i+a][j+b].setBackground(on ? Color.BLUE : null);
-                    matriceBottoni[i+a][j+b].setForeground(on ? Color.WHITE : null);
+                    if(i+a >= 0 && j+b >=0 && i+a < matriceBottoni.length && j+b < matriceBottoni[0].length)
+                    {
+                        matriceBottoni[i+a][j+b].setBackground(on ? Color.BLUE : null);
+                        matriceBottoni[i+a][j+b].setForeground(on ? Color.WHITE : null);
+                    }
                 }
 
                 // Sostituisce i colori nel caso particolare in cui il mouse si trova in [0][0]
